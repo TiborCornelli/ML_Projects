@@ -1,2 +1,2 @@
-**ExoPlanet:** Playing around with the NASA Exoplanet Dataset https://archive.stsci.edu/missions-and-data/k2. \n
-**WavePropagation:** Implementation of the FNO (https://arxiv.org/pdf/2010.08895) as an alternative to traditional numerical solverss like the FDTD scheme.
+* **ExoPlanet:** Playing around with the [NASA Exoplanet Dataset](https://archive.stsci.edu/missions-and-data/k2) to identify planetary transits in stellar light curves.
+* **WavePropagation:** Implementation of the [Fourier Neural Operator (FNO)](https://arxiv.org/pdf/2010.08895) as a learned alternative to traditional numerical solvers like the FDTD scheme. The FNO can be used e.g. to simulate the evolution of Electromagnetic waves.
