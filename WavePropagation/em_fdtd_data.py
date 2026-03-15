@@ -47,7 +47,7 @@ def gaussian_source(t: float, t0: float, spread: float, freq: float) -> float:
     return float(envelope * carrier)
 
 
-def simulate_sample(config: SimulationConfig, rng: np.random.Generator) -> np.ndarray:
+def simulate_sample(config: SimulationConfig, rng: np.random.Generator) -> tuple[np.ndarray, np.ndarray]:
     nx = config.nx
     nt = config.nt
     dx = config.dx
@@ -91,13 +91,21 @@ def simulate_sample(config: SimulationConfig, rng: np.random.Generator) -> np.nd
         if n in snap_steps:
             snapshots.append(e.copy())
 
-    return np.stack(snapshots, axis=0)
+    return np.stack(snapshots, axis=0), eps
 
 
-def generate_dataset(num_samples: int, config: SimulationConfig, seed: int) -> np.ndarray:
+def generate_dataset(num_samples: int, config: SimulationConfig, seed: int) -> tuple[np.ndarray, np.ndarray]:
     rng = np.random.default_rng(seed)
-    data = [simulate_sample(config, rng) for _ in range(num_samples)]
-    return np.stack(data, axis=0).astype(np.float32)
+    trajectories = []
+    eps_profiles = []
+    for _ in range(num_samples):
+        traj, eps = simulate_sample(config, rng)
+        trajectories.append(traj)
+        eps_profiles.append(eps)
+    return (
+        np.stack(trajectories, axis=0).astype(np.float32),
+        np.stack(eps_profiles, axis=0).astype(np.float32),
+    )
 
 
 def save_splits(output_dir: Path, config: SimulationConfig, seed: int) -> None:
@@ -110,9 +118,9 @@ def save_splits(output_dir: Path, config: SimulationConfig, seed: int) -> None:
         "test_unknown": 120,
     }
 
-    data_train = generate_dataset(splits["train"], config, seed=seed)
-    data_val = generate_dataset(splits["val"], config, seed=seed + 1)
-    data_test = generate_dataset(splits["test"], config, seed=seed + 2)
+    data_train, eps_train = generate_dataset(splits["train"], config, seed=seed)
+    data_val, eps_val = generate_dataset(splits["val"], config, seed=seed + 1)
+    data_test, eps_test = generate_dataset(splits["test"], config, seed=seed + 2)
 
     unknown_config = SimulationConfig(
         nx=config.nx,
@@ -132,12 +140,16 @@ def save_splits(output_dir: Path, config: SimulationConfig, seed: int) -> None:
         src_freq_min=0.03,
         src_freq_max=0.08,
     )
-    data_unknown = generate_dataset(splits["test_unknown"], unknown_config, seed=seed + 7)
+    data_unknown, eps_unknown = generate_dataset(splits["test_unknown"], unknown_config, seed=seed + 7)
 
     np.save(output_dir / f"data_train_{config.nx}.npy", data_train)
     np.save(output_dir / f"data_val_{config.nx}.npy", data_val)
     np.save(output_dir / f"data_test_{config.nx}.npy", data_test)
     np.save(output_dir / f"data_test_unknown_{config.nx}.npy", data_unknown)
+    np.save(output_dir / f"eps_train_{config.nx}.npy", eps_train)
+    np.save(output_dir / f"eps_val_{config.nx}.npy", eps_val)
+    np.save(output_dir / f"eps_test_{config.nx}.npy", eps_test)
+    np.save(output_dir / f"eps_test_unknown_{config.nx}.npy", eps_unknown)
 
     for nx_small in [32, 64, 96]:
         small_cfg = SimulationConfig(
@@ -158,12 +170,15 @@ def save_splits(output_dir: Path, config: SimulationConfig, seed: int) -> None:
             src_freq_min=config.src_freq_min,
             src_freq_max=config.src_freq_max,
         )
-        data_small_train = generate_dataset(splits["train"], small_cfg, seed=seed + 100 + nx_small)
-        data_small_val = generate_dataset(splits["val"], small_cfg, seed=seed + 200 + nx_small)
-        data_small_test = generate_dataset(splits["test"], small_cfg, seed=seed + 300 + nx_small)
+        data_small_train, eps_small_train = generate_dataset(splits["train"], small_cfg, seed=seed + 100 + nx_small)
+        data_small_val, eps_small_val = generate_dataset(splits["val"], small_cfg, seed=seed + 200 + nx_small)
+        data_small_test, eps_small_test = generate_dataset(splits["test"], small_cfg, seed=seed + 300 + nx_small)
         np.save(output_dir / f"data_train_{nx_small}.npy", data_small_train)
         np.save(output_dir / f"data_val_{nx_small}.npy", data_small_val)
         np.save(output_dir / f"data_test_{nx_small}.npy", data_small_test)
+        np.save(output_dir / f"eps_train_{nx_small}.npy", eps_small_train)
+        np.save(output_dir / f"eps_val_{nx_small}.npy", eps_small_val)
+        np.save(output_dir / f"eps_test_{nx_small}.npy", eps_small_test)
 
 
 def build_config_from_args(args: argparse.Namespace) -> SimulationConfig:
