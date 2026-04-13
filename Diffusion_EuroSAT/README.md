@@ -12,9 +12,9 @@ Minimal implementation of a score-based diffusion model trained on the EuroSAT d
 
 We use a continuous-time Ornstein–Uhlenbeck type diffusion:
 
-[
+$$
 x_t = e^{-t} x_0 + \sqrt{1 - e^{-2t}} ,\epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
-]
+$$
 
 ## Score Matching Objective
 
