@@ -175,6 +175,7 @@ class Galaxy10Dataset(Dataset):
 
 def train():
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using device: {device}")
     dataset = Galaxy10Dataset("/kaggle/input/datasets/tiborcornelli/galaxy10/Galaxy10.h5")
     indices = [i for i, label in enumerate(dataset.labels) if label == 1]
     loader = DataLoader(Subset(dataset, indices), batch_size=32, shuffle=True)
