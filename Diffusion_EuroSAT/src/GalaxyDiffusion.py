@@ -185,9 +185,10 @@ def train():
     optimizer = Adam(model.parameters(), lr=1e-4)
     diffusion = Diffusion(device=device)
     
-    for epoch in range(100):
+    EPOCHS = 100
+    for epoch in range(EPOCHS):
         pbar = tqdm(loader)
-        pbar.set_description(f"Epoch {epoch}")
+        pbar.set_description(f"Epoch {epoch} / {EPOCHS} ")
         for i, (images, _) in enumerate(pbar):
             images = images.to(device)
             t = torch.randint(low=0, high=1000, size=(images.shape[0],)).to(device)
