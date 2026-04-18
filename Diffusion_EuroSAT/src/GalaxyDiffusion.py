@@ -185,7 +185,7 @@ def train():
     optimizer = Adam(model.parameters(), lr=1e-4)
     diffusion = Diffusion(device=device)
     
-    for epoch in range(5):
+    for epoch in range(100):
         pbar = tqdm(loader)
         pbar.set_description(f"Epoch {epoch}")
         for i, (images, _) in enumerate(pbar):
@@ -201,19 +201,21 @@ def train():
             ema.update()
             pbar.set_postfix(MSE=loss.item())
 
+        if (epoch + 1) % 10 == 0:
+            ema.apply_shadow()
+            samples = diffusion.sample(model, 16)
+            samples = (samples.clamp(-1, 1) + 1) / 2
+            utils.save_image(samples, f"samples_epoch_{epoch+1}.png", nrow=4)
+            ema.restore()
+
     ema.apply_shadow()
-    samples = diffusion.sample(model, 16)
-    samples = (samples.clamp(-1, 1) + 1) / 2
-    
     torch.save(model.state_dict(), "galaxy_diffusion_model.pth")
-    
     checkpoint = {
         'epoch': epoch,
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
     }
     torch.save(checkpoint, "checkpoint.pth")
-    utils.save_image(samples, "galaxy_samples.png", nrow=4)
 
 if __name__ == "__main__":
     train()
