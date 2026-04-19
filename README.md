@@ -1,4 +1,4 @@
-* **EuroSAT_Diffusion:** Implementation of a score-based generative model using a Residual UNet to synthesize satellite imagery. It employs Denoising Score Matching and Langevin Dynamics to generate specific land-use classes like highways from the [EuroSAT](https://github.com/phelber/EuroSAT) dataset.
+* **EuroSAT_Diffusion:** An experiment to see if a minimal score-based generative model (Residual UNet) could generate reasonable satellite imagery. It uses Denoising Score Matching and Langevin Dynamics to synthesize specific land-use classes like highways from the [EuroSAT](https://github.com/phelber/EuroSAT) dataset. 
 * **ExoPlanet:** Playing around with the [NASA Exoplanet Dataset](https://archive.stsci.edu/missions-and-data/k2) to identify planetary transits in stellar light curves.
 * **Galaxy_Diffusion:** Implementation of a score-based diffusion model (DDPM) to generate synthetic galaxy images. Trained on the [Galaxy10 SDSS](https://astronn.readthedocs.io/en/latest/galaxy10sdss.html) dataset, the model utilizes a Residual UNet with sinusoidal positional embeddings to learn the score function of astronomical structures, enabling the synthesis of high-fidelity spiral and elliptical galaxies from Gaussian noise.
 * **Siamese_ResNet:** I implemented a [Siamese Neural Network](https://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf) to match faces.
@@ -6,5 +6,12 @@
 
 
 ## Galaxy Diffusion Model
-![Training]i(GalaxyDiffusion/Results/Fig1_Training.png)
+![GalaxyDiffusion](Images/GalaxyDiffusion_Training.png)
+
+## EuroSAT Diffusion Model
+![EuroSATDiffusion](Images/EuroSAT.png)
+
+## Wave Propagation (Fourier Neural Operator)
+![FNO](Images/FNO.png)
+
 
