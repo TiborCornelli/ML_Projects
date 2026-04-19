@@ -1,3 +1,6 @@
 [submodule "GalaxyDiffusion"]
 	path = GalaxyDiffusion
 	url = https://github.com/TiborCornelli/GalaxyDiffusion
+[submodule "EuroSAT_Diffusion"]
+	path = EuroSAT_Diffusion
+	url = https://github.com/TiborCornelli/EuroSAT_Diffusion
