@@ -4,3 +4,6 @@
 [submodule "EuroSAT_Diffusion"]
 	path = EuroSAT_Diffusion
 	url = https://github.com/TiborCornelli/EuroSAT_Diffusion
+[submodule "ExoPlanet"]
+	path = ExoPlanet
+	url = https://github.com/TiborCornelli/ExoPlanet
