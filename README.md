@@ -6,5 +6,5 @@
 
 
 ## Galaxy Diffusion Model
-![Training](GalaxyDiffusion/Results/Fig1_Training.png)
+[Training](GalaxyDiffusion/Results/Fig1_Training.png)
 
