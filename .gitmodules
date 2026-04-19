@@ -1,0 +1,3 @@
+[submodule "GalaxyDiffusion"]
+	path = GalaxyDiffusion
+	url = https://github.com/TiborCornelli/GalaxyDiffusion
